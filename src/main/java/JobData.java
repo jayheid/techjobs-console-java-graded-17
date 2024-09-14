@@ -5,10 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -56,12 +53,12 @@ public class JobData {
     /**
      * Returns results of search the jobs data by key/value, using
      * inclusion of the search term.
-     *
+     * <p>
      * For example, searching for employer "Enterprise" will include results
      * with "Enterprise Holdings, Inc".
      *
-     * @param column   Column that should be searched.
-     * @param value Value of teh field to search for
+     * @param column Column that should be searched.
+     * @param value  Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
@@ -87,7 +84,7 @@ public class JobData {
      * Search all columns for the given term
      *
      * @param value The search term to look for
-     * @return      List of all jobs with at least one field containing the value
+     * @return List of all jobs with at least one field containing the value
      */
     public static ArrayList<HashMap<String, String>> findByValue(String value) {
 
@@ -95,7 +92,29 @@ public class JobData {
         loadData();
 
         // TODO - implement this method
-        return null;
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        String searchValue = value.toLowerCase();
+        // create new ArrayList (searchArray)
+        ArrayList<String> searchArray = new ArrayList<String>();
+        String searchString;
+
+        for (HashMap<String, String> jobSet : allJobs) {
+
+            for (Map.Entry<String, String> job : jobSet.entrySet()) {
+                // append entry set value to searchArray in lowercase
+                searchArray.add(job.getValue().toLowerCase());
+            }
+            // if search value anywhere in search string
+            searchString = searchArray.toString();
+            if (searchString.contains(searchValue)) {
+                // append jobSet to jobs Array
+                jobs.add(jobSet);
+            }
+
+            searchArray.clear(); // empty search Array before checking next job set
+        }
+
+        return jobs;
     }
 
     /**
